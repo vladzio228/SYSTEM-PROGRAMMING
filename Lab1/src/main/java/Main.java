@@ -6,9 +6,7 @@ public class Main {
         Parser parser = new Parser("MyDocument.txt");
 
         for (String word: parser.parsedWords()) {
-            if(Tools.repeatSymbols(word)){
                 System.out.println(word);
-            };
         }
     }
 }

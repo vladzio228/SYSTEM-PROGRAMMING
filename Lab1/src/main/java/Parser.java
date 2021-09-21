@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Parser {
 
@@ -14,32 +13,33 @@ public class Parser {
         scanner = new Scanner(file);
     }
 
-    public Set<String> parsedWords() {
-        String inputString = "";
-        Set<String> words = new HashSet<>();
+    public HashSet<String> parsedWords() {
+        HashSet<String> words = new HashSet<>();
+        String thisLine ="";
 
-        while (scanner.hasNext())
-            inputString += scanner.nextLine() + "\r\n";
+        while (scanner.hasNext()) {
+            thisLine += scanner.nextLine() + "\r\n";
+        }
         scanner.close();
-
-        int firstSymb = 0;
-        for (int lastSymb = 0; lastSymb < inputString.length(); ++lastSymb) {
-            if (lastSymb - 1 >= 0) {
-                if (!(Character.isLetter(inputString.charAt(lastSymb)))) {
-                    if (Character.isLetter(inputString.charAt(lastSymb - 1))) {
-                        Tools.addNewWord(words, inputString, firstSymb, lastSymb);
-                    }
-                    firstSymb = lastSymb;
-                } else {
-                    if (!Character.isLetter(inputString.charAt(lastSymb - 1))) {
+            int firstSymb = 0;
+            for (int lastSymb = 0; lastSymb < thisLine.length(); ++lastSymb) {
+                if (lastSymb - 1 >= 0) {
+                    boolean letter = Character.isLetter(thisLine.charAt(lastSymb - 1));
+                    if (!(Character.isLetter(thisLine.charAt(lastSymb)))) {
+                        if (letter) {
+                            Tools.addNewWord(words,thisLine, firstSymb, lastSymb);
+                        }
                         firstSymb = lastSymb;
-                    }
-                    if (lastSymb == inputString.length() - 1) {
-                        Tools.addNewWord(words, inputString, firstSymb, lastSymb);
+                    } else {
+                        if (!letter) {
+                            firstSymb = lastSymb;
+                        }
+                        if (lastSymb == thisLine.length() - 1) {
+                            Tools.addNewWord(words, thisLine, firstSymb, lastSymb);
+                        }
                     }
                 }
             }
-        }
         return words;
     }
 }
