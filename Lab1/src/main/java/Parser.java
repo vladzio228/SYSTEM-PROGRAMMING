@@ -1,45 +1,33 @@
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashSet;
-import java.util.Scanner;
 
 public class Parser {
 
-    private File file;
-    private Scanner scanner;
+    private final BufferedReader bufferedReader;
+    private final FileReader fileReader;
 
     public Parser(String path) throws FileNotFoundException {
-        file = new File(path);
-        scanner = new Scanner(file);
+        fileReader = new FileReader(path);
+        bufferedReader = new BufferedReader(fileReader);
     }
 
-    public HashSet<String> parsedWords() {
+    public HashSet<String> parsedWords() throws IOException {
         HashSet<String> words = new HashSet<>();
-        String thisLine ="";
+        StringBuilder temps = new StringBuilder();
+        while (bufferedReader.ready()) {
+            char temp = (char) bufferedReader.read();
+            boolean letter = Character.isLetter(temp);
 
-        while (scanner.hasNext()) {
-            thisLine += scanner.nextLine() + "\r\n";
-        }
-        scanner.close();
-            int firstSymb = 0;
-            for (int lastSymb = 0; lastSymb < thisLine.length(); ++lastSymb) {
-                if (lastSymb - 1 >= 0) {
-                    boolean letter = Character.isLetter(thisLine.charAt(lastSymb - 1));
-                    if (!(Character.isLetter(thisLine.charAt(lastSymb)))) {
-                        if (letter) {
-                            Tools.addNewWord(words,thisLine, firstSymb, lastSymb);
-                        }
-                        firstSymb = lastSymb;
-                    } else {
-                        if (!letter) {
-                            firstSymb = lastSymb;
-                        }
-                        if (lastSymb == thisLine.length() - 1) {
-                            Tools.addNewWord(words, thisLine, firstSymb, lastSymb);
-                        }
-                    }
-                }
+            if (letter) {
+                temps.append(temp);
+            } else {
+                Tools.addNewWord(words,temps.toString());
+                temps = new StringBuilder();
             }
+        }
         return words;
     }
 }

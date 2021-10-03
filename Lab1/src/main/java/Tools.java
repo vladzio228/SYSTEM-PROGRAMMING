@@ -2,12 +2,12 @@ import java.util.HashSet;
 
 public class Tools {
 
-    public static void addNewWord(HashSet<String> set, String inputString, int firstSymb, int lastSymb) {
-        if (repeatSymbols(inputString.substring(firstSymb,lastSymb))) {
-            if (lastSymb - firstSymb <= 30) {
-                set.add(inputString.substring(firstSymb, lastSymb));
+    public static void addNewWord(HashSet<String> set, String str) {
+        if (repeatSymbols(str)) {
+            if (str.length() <= 30) {
+                set.add(str);
             } else {
-                set.add(inputString.substring(firstSymb, firstSymb + 30));
+                set.add(str.substring(0, 30));
             }
         }
     }
